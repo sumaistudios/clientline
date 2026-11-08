@@ -42,7 +42,7 @@ async function gh(cfg: Config, path: string, init: RequestInit = {}): Promise<Re
 }
 
 export function statusOf(issue: Pick<GhIssue, 'state' | 'state_reason' | 'labels'>): Status {
-  if (issue.state === 'closed') return issue.state_reason === 'not_planned' ? 'Closed' : 'Done'
+  if (issue.state === 'closed') return !issue.state_reason || issue.state_reason === 'completed' ? 'Done' : 'Closed'
   const names = issue.labels.map(l => (typeof l === 'string' ? l : l.name ?? ''))
   return names.includes(IN_PROGRESS_LABEL) ? 'In progress' : 'Received'
 }

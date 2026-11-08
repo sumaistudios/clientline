@@ -6,7 +6,7 @@ Your client opens their link, says what they need, and follows its status. Each 
 
 - **One link per client.** `/c/<key>`, no sign-up. A client sees only their own requests.
 - **Requests are GitHub issues,** labelled `client:<name>`, so they land in the tracker you already use.
-- **Status comes from the issue.** Open is *Received*, add an `in-progress` label for *In progress*, close it for *Done* (closing as "not planned" shows *Closed*).
+- **Status comes from the issue.** Open is *Received*, add an `in-progress` label for *In progress*, close it for *Done* (closing as "not planned" or as a duplicate shows *Closed*).
 - **Your name, not ours.** Client pages show your name only.
 
 ## Deploy
