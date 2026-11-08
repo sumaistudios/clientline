@@ -79,10 +79,11 @@ export function issueBody(client: string, r: NewRequest): string {
   return lines.join('\n')
 }
 
-export async function createRequest(cfg: Config, client: string, r: NewRequest): Promise<number> {
+export async function createRequest(cfg: Config, client: string, r: NewRequest): Promise<Request> {
   const res = await gh(cfg, '/issues', {
     method: 'POST',
     body: JSON.stringify({ title: r.title, body: issueBody(client, r), labels: [clientLabel(client), ...cfg.extraLabels] }),
   })
-  return ((await res.json()) as { number: number }).number
+  const i = (await res.json()) as GhIssue
+  return { number: i.number, title: i.title, status: statusOf(i), createdAt: i.created_at, updatedAt: i.updated_at }
 }

@@ -2,11 +2,14 @@
 
 import { revalidatePath } from 'next/cache'
 import { clientForKey, getConfig } from '@/lib/config'
-import { createRequest } from '@/lib/github'
+import { createRequest, type Request } from '@/lib/github'
 
 export interface FormState {
   ok?: boolean
   error?: string
+  // GitHub's label filter can take a few seconds to include a new issue, so
+  // the page shows what was just sent until the list catches up.
+  sent?: Request
 }
 
 function httpUrl(v: FormDataEntryValue | null): string | undefined | null {
@@ -35,12 +38,13 @@ export async function submitRequest(key: string, _prev: FormState, form: FormDat
   if (!description || description.length > 5000) return { error: 'Describe what you need (up to 5,000 characters).' }
   if (pageUrl === null || screenshotUrl === null) return { error: 'Links must start with http:// or https://.' }
 
+  let sent: Request
   try {
-    await createRequest(cfg, client.name, { title, description, pageUrl, screenshotUrl })
+    sent = await createRequest(cfg, client.name, { title, description, pageUrl, screenshotUrl })
   } catch (err) {
     console.error(err)
     return { error: 'Your request could not be sent. Please try again in a minute.' }
   }
   revalidatePath(`/c/${key}`)
-  return { ok: true }
+  return { ok: true, sent }
 }
