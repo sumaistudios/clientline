@@ -1,36 +1,52 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Clientline
 
-## Getting Started
+A private request page for each of your clients, with GitHub Issues as the backend.
 
-First, run the development server:
+Your client opens their link, says what they need, and follows its status. Each request becomes an issue in your repo. There is no database, no client accounts and nothing to host beyond one small Next.js app.
+
+- **One link per client.** `/c/<key>`, no sign-up. A client sees only their own requests.
+- **Requests are GitHub issues,** labelled `client:<name>`, so they land in the tracker you already use.
+- **Status comes from the issue.** Open is *Received*, add an `in-progress` label for *In progress*, close it for *Done* (closing as "not planned" shows *Closed*).
+- **Your name, not ours.** Client pages show your name only.
+
+## Deploy
+
+[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Fsumaistudios%2Fclientline&env=GITHUB_TOKEN,GITHUB_REPO,FREELANCER_NAME,CLIENTS&envDescription=See%20the%20README%20for%20each%20setting)
+
+Set four environment variables:
+
+| Variable | Example | |
+|---|---|---|
+| `GITHUB_TOKEN` | `github_pat_…` | A [fine-grained token](https://github.com/settings/personal-access-tokens/new) with access to that one repo and **Issues: Read and write**. Nothing else. |
+| `GITHUB_REPO` | `you/client-work` | Where requests are filed. |
+| `FREELANCER_NAME` | `Ada Studio` | Shown at the top of every client page. |
+| `CLIENTS` | `acme:Xk29fQp4mL,bloom:Tz81vNc3qW` | Each client's name (lowercase, used in the label) and the secret key in their link. |
+
+Optional: `EXTRA_LABELS`, a comma-separated list of labels added to every request (for example `triage`).
+
+Make each key long and random, for example `openssl rand -base64 12 | tr -d '/+='`. To revoke a link, change that client's key and redeploy.
+
+Then send each client their link: `https://<your-deploy>/c/<their key>`.
+
+## Run locally
 
 ```bash
+cp .env.example .env.local   # fill it in
+npm install
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## What a client can and cannot do
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+- They can create issues in your repo with the label for their name, and read the title and status of issues with that label.
+- They never see issue bodies, comments, other clients' requests or anything else in the repo.
+- Their text is put in a code block in the issue, so it cannot @mention people or add markdown to your tracker.
+- Pages are marked noindex and send no referrer, so links do not leak to other sites.
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## Fix them automatically
 
-## Learn More
+Clientline only collects the requests. If you want each one investigated, fixed on its own branch, independently verified and opened as a pull request for you to review, that is what [Keanu](https://www.heykeanu.app) does: add `keanu` to `EXTRA_LABELS` and Keanu picks up every new request.
 
-To learn more about Next.js, take a look at the following resources:
+## License
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+MIT
