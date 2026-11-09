@@ -2,6 +2,8 @@
 
 A private request page for each of your clients, with GitHub Issues as the backend.
 
+<img src="docs/clientline.gif" alt="A client sends a request on their Clientline page and it appears at the top of their list as Received" width="760">
+
 Your client opens their link, says what they need, and follows its status. Each request becomes an issue in your repo. There is no database, no client accounts and nothing to host beyond one small Next.js app.
 
 - **One link per client.** `/c/<key>`, no sign-up. A client sees only their own requests.
