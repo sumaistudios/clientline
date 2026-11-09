@@ -1,0 +1,21 @@
+# AWS Amplify Hosting build. Amplify hands environment variables to the build
+# but not to the running server, so the build copies Clientline's settings
+# into .env.production (gitignored; never printed to the build log).
+version: 1
+frontend:
+  phases:
+    preBuild:
+      commands:
+        - npm ci
+    build:
+      commands:
+        - env | grep -E '^(GITHUB_TOKEN|GITHUB_REPO|FREELANCER_NAME|CLIENTS|EXTRA_LABELS|DEMO)=' >> .env.production || true
+        - npm run build
+  artifacts:
+    baseDirectory: .next
+    files:
+      - '**/*'
+  cache:
+    paths:
+      - .next/cache/**/*
+      - node_modules/**/*

@@ -30,6 +30,12 @@ Make each key long and random, for example `openssl rand -base64 12 | tr -d '/+=
 
 Then send each client their link: `https://<your-deploy>/c/<their key>`.
 
+### Or on AWS Amplify
+
+In the Amplify console, **Create new app → GitHub**, pick your copy of this repo and its branch. Amplify reads the build settings from `amplify.yml`. Before the first deploy, open **Advanced settings** and add the same environment variables, then **Save and deploy**. A small site like this costs cents a month.
+
+Amplify only gives settings to the build, so `amplify.yml` writes them into the app as it builds. After you change a setting, redeploy for it to take effect.
+
 ## Try it
 
 Run it with sample data, without a token or a repo: set `DEMO=1` (and nothing else) and open `/c/demo`. Requests you send in demo mode are shown back but not saved or sent anywhere.
