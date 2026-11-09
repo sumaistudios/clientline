@@ -1,6 +1,6 @@
 # Clientline
 
-A private request page for each of your clients, with GitHub Issues as the backend.
+A private request page for each of your clients, with GitHub Issues as the backend. Made by the team behind [Keanu](https://www.heykeanu.app/?ref=clientline).
 
 <img src="docs/clientline.gif" alt="A client sends a request on their Clientline page and it appears at the top of their list as Received" width="760">
 
@@ -57,7 +57,7 @@ npm run dev
 
 ## Fix them automatically
 
-Clientline only collects the requests. If you want each one investigated, fixed on its own branch, independently verified and opened as a pull request for you to review, that is what [Keanu](https://www.heykeanu.app) does: add `keanu` to `EXTRA_LABELS` and Keanu picks up every new request.
+Clientline only collects the requests. If you want each one investigated, fixed on its own branch, independently verified and opened as a pull request for you to review, that is what [Keanu](https://www.heykeanu.app/?ref=clientline) does: add `keanu` to `EXTRA_LABELS` and Keanu picks up every new request.
 
 ## License
 
