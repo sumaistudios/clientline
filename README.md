@@ -28,6 +28,10 @@ Make each key long and random, for example `openssl rand -base64 12 | tr -d '/+=
 
 Then send each client their link: `https://<your-deploy>/c/<their key>`.
 
+## Try it
+
+Run it with sample data, without a token or a repo: set `DEMO=1` (and nothing else) and open `/c/demo`. Requests you send in demo mode are shown back but not saved or sent anywhere.
+
 ## Run locally
 
 ```bash

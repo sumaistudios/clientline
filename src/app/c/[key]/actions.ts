@@ -3,6 +3,7 @@
 import { revalidatePath } from 'next/cache'
 import { clientForKey, getConfig } from '@/lib/config'
 import { createRequest, type Request } from '@/lib/github'
+import { demoCreate } from '@/lib/demo'
 
 export interface FormState {
   ok?: boolean
@@ -37,6 +38,8 @@ export async function submitRequest(key: string, _prev: FormState, form: FormDat
   if (!title || title.length > 120) return { error: 'Give it a short title (up to 120 characters).' }
   if (!description || description.length > 5000) return { error: 'Describe what you need (up to 5,000 characters).' }
   if (pageUrl === null || screenshotUrl === null) return { error: 'Links must start with http:// or https://.' }
+
+  if (cfg.demo) return { ok: true, sent: demoCreate({ title, description, pageUrl, screenshotUrl }) }
 
   let sent: Request
   try {

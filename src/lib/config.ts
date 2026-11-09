@@ -15,6 +15,8 @@ export interface Config {
   freelancer: string
   clients: Client[]
   extraLabels: string[]
+  /** Sample data, nothing read from or sent to GitHub (DEMO=1). */
+  demo: boolean
 }
 
 const NAME_RE = /^[a-z0-9][a-z0-9-]{0,38}$/
@@ -33,7 +35,17 @@ export function parseClients(raw: string): Client[] {
   return clients
 }
 
+/** The one client in demo mode, at /c/demo. */
+export const DEMO_CLIENT: Client = { name: 'acme', key: 'demo' }
+
+export function isDemo(env: NodeJS.ProcessEnv = process.env): boolean {
+  return /^(1|true|yes)$/i.test(env.DEMO?.trim() ?? '')
+}
+
 export function getConfig(env: NodeJS.ProcessEnv = process.env): Config {
+  if (isDemo(env)) {
+    return { token: '', repo: '', freelancer: env.FREELANCER_NAME?.trim() || 'Ada Studio', clients: [DEMO_CLIENT], extraLabels: [], demo: true }
+  }
   const missing = ['GITHUB_TOKEN', 'GITHUB_REPO', 'FREELANCER_NAME', 'CLIENTS'].filter(k => !env[k]?.trim())
   if (missing.length) throw new Error(`Clientline is not set up: missing ${missing.join(', ')}. See the README.`)
   const repo = env.GITHUB_REPO!.trim()
@@ -44,6 +56,7 @@ export function getConfig(env: NodeJS.ProcessEnv = process.env): Config {
     freelancer: env.FREELANCER_NAME!.trim(),
     clients: parseClients(env.CLIENTS!),
     extraLabels: (env.EXTRA_LABELS ?? '').split(',').map(s => s.trim()).filter(Boolean),
+    demo: false,
   }
 }
 
