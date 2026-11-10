@@ -2,6 +2,8 @@
 
 A private request page for each of your clients, with GitHub Issues as the backend. Made by the team behind [Keanu](https://www.heykeanu.app/?ref=clientline).
 
+**[See the demo](https://stable.d1cpamxjnrj7er.amplifyapp.com/c/demo)**, a sample client page you can send requests from.
+
 <img src="docs/clientline.gif" alt="A client sends a request on their Clientline page and it appears at the top of their list as Received" width="760">
 
 Your client opens their link, says what they need, and follows its status. Each request becomes an issue in your repo. There is no database, no client accounts and nothing to host beyond one small Next.js app.
@@ -38,7 +40,7 @@ Amplify only gives settings to the build, so `amplify.yml` writes them into the 
 
 ## Try it
 
-Run it with sample data, without a token or a repo: set `DEMO=1` (and nothing else) and open `/c/demo`. Requests you send in demo mode are shown back but not saved or sent anywhere.
+Open the [live demo](https://stable.d1cpamxjnrj7er.amplifyapp.com/c/demo). To run it yourself with sample data, without a token or a repo: set `DEMO=1` (and nothing else) and open `/c/demo`. Requests you send in demo mode are shown back but not saved or sent anywhere.
 
 ## Run locally
 
