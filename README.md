@@ -26,7 +26,10 @@ Set four environment variables:
 | `FREELANCER_NAME` | `Ada Studio` | Shown at the top of every client page. |
 | `CLIENTS` | `acme:Xk29fQp4mL,bloom:Tz81vNc3qW` | Each client's name (lowercase, used in the label) and the secret key in their link. |
 
-Optional: `EXTRA_LABELS`, a comma-separated list of labels added to every request (for example `triage`).
+Optional:
+
+- `EXTRA_LABELS`, a comma-separated list of labels added to every request (for example `triage`).
+- `DAILY_LIMIT`, the most requests one client can send in 24 hours (default `10`, `0` for no limit). It is counted on GitHub, so it needs no database, and it caps what anyone can do with a leaked link.
 
 Make each key long and random, for example `openssl rand -base64 12 | tr -d '/+='`. To revoke a link, change that client's key and redeploy.
 

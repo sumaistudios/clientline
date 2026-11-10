@@ -2,7 +2,7 @@
 
 import { revalidatePath } from 'next/cache'
 import { clientForKey, getConfig } from '@/lib/config'
-import { createRequest, type Request } from '@/lib/github'
+import { createRequest, sentInLastDay, type Request } from '@/lib/github'
 import { demoCreate } from '@/lib/demo'
 
 export interface FormState {
@@ -43,6 +43,11 @@ export async function submitRequest(key: string, _prev: FormState, form: FormDat
 
   let sent: Request
   try {
+    // A cap per client, counted on GitHub, so a leaked link can file only so
+    // much. Two requests sent at the same moment can both pass; that is fine.
+    if (cfg.dailyLimit > 0 && await sentInLastDay(cfg, client.name) >= cfg.dailyLimit) {
+      return { error: `This page takes up to ${cfg.dailyLimit} requests a day, and that many have been sent. Please try again tomorrow, or contact ${cfg.freelancer} directly if it is urgent.` }
+    }
     sent = await createRequest(cfg, client.name, { title, description, pageUrl, screenshotUrl })
   } catch (err) {
     console.error(err)

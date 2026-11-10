@@ -23,6 +23,7 @@ interface GhIssue {
   labels: (string | { name?: string })[]
   created_at: string
   updated_at: string
+  body?: string | null
   pull_request?: unknown
 }
 
@@ -66,12 +67,36 @@ export interface NewRequest {
   screenshotUrl?: string
 }
 
+const DAY_MS = 24 * 60 * 60 * 1000
+
+/** Requests this client sent through Clientline since `since`. Issues you
+ *  labelled for them yourself (say, from Keanu) do not count: only ones whose
+ *  body Clientline wrote. */
+export function countSentSince(issues: Pick<GhIssue, 'body' | 'created_at' | 'pull_request'>[], client: string, since: Date): number {
+  const mark = sentByLine(client)
+  return issues.filter(i => !i.pull_request && Date.parse(i.created_at) >= since.getTime() && (i.body ?? '').startsWith(mark)).length
+}
+
+/** How many requests this client sent in the last 24 hours. GitHub's `since`
+ *  filters on last update, which every new issue passes; creation is checked
+ *  here. */
+export async function sentInLastDay(cfg: Config, client: string, now = new Date()): Promise<number> {
+  const since = new Date(now.getTime() - DAY_MS)
+  const q = new URLSearchParams({ labels: clientLabel(client), state: 'all', since: since.toISOString(), per_page: '100' })
+  const issues = (await (await gh(cfg, `/issues?${q}`)).json()) as GhIssue[]
+  return countSentSince(issues, client, since)
+}
+
+function sentByLine(client: string): string {
+  return `Requested by **${client}** through Clientline.`
+}
+
 /** The client's words go inside a fence so they cannot @mention people or
  *  inject markdown into the tracker; the two links are checked to be http(s). */
 export function issueBody(client: string, r: NewRequest): string {
   const fence = '~~~~'
   const text = r.description.replace(/~{4,}/g, '~~~')
-  const lines = [`Requested by **${client}** through Clientline.`, '']
+  const lines = [sentByLine(client), '']
   if (r.pageUrl) lines.push(`Page: ${r.pageUrl}`)
   if (r.screenshotUrl) lines.push(`Screenshot: ${r.screenshotUrl}`)
   if (r.pageUrl || r.screenshotUrl) lines.push('')

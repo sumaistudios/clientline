@@ -15,6 +15,8 @@ export interface Config {
   freelancer: string
   clients: Client[]
   extraLabels: string[]
+  /** Most requests one client can send in 24 hours; 0 for no limit. */
+  dailyLimit: number
   /** Sample data, nothing read from or sent to GitHub (DEMO=1). */
   demo: boolean
 }
@@ -38,13 +40,21 @@ export function parseClients(raw: string): Client[] {
 /** The one client in demo mode, at /c/demo. */
 export const DEMO_CLIENT: Client = { name: 'acme', key: 'demo' }
 
+/** DAILY_LIMIT, default 10, so a leaked link can file only so much. */
+export function parseDailyLimit(raw: string | undefined): number {
+  const s = raw?.trim()
+  if (!s) return 10
+  if (!/^\d+$/.test(s)) throw new Error('DAILY_LIMIT must be a whole number (0 for no limit)')
+  return Number(s)
+}
+
 export function isDemo(env: NodeJS.ProcessEnv = process.env): boolean {
   return /^(1|true|yes)$/i.test(env.DEMO?.trim() ?? '')
 }
 
 export function getConfig(env: NodeJS.ProcessEnv = process.env): Config {
   if (isDemo(env)) {
-    return { token: '', repo: '', freelancer: env.FREELANCER_NAME?.trim() || 'Ada Studio', clients: [DEMO_CLIENT], extraLabels: [], demo: true }
+    return { token: '', repo: '', freelancer: env.FREELANCER_NAME?.trim() || 'Ada Studio', clients: [DEMO_CLIENT], extraLabels: [], dailyLimit: 0, demo: true }
   }
   const missing = ['GITHUB_TOKEN', 'GITHUB_REPO', 'FREELANCER_NAME', 'CLIENTS'].filter(k => !env[k]?.trim())
   if (missing.length) throw new Error(`Clientline is not set up: missing ${missing.join(', ')}. See the README.`)
@@ -56,6 +66,7 @@ export function getConfig(env: NodeJS.ProcessEnv = process.env): Config {
     freelancer: env.FREELANCER_NAME!.trim(),
     clients: parseClients(env.CLIENTS!),
     extraLabels: (env.EXTRA_LABELS ?? '').split(',').map(s => s.trim()).filter(Boolean),
+    dailyLimit: parseDailyLimit(env.DAILY_LIMIT),
     demo: false,
   }
 }
