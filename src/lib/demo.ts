@@ -27,6 +27,10 @@ export function demoRequests(now: number = Date.now()): Request[] {
   ]
 }
 
+/** A pretend earlier visit, so the demo shows what a returning client sees:
+ *  #48 is new, #47 started and #45 was finished since. */
+export const DEMO_PREVIOUS_VISIT: Record<number, Status> = { 47: 'Received', 45: 'In progress', 44: 'Done', 41: 'Closed' }
+
 let next = 49
 
 /** A sent request as it would come back from GitHub, without filing it. */

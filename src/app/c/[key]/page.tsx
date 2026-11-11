@@ -2,7 +2,7 @@ import type { Metadata } from 'next'
 import { notFound } from 'next/navigation'
 import { clientForKey, getConfig } from '@/lib/config'
 import { listRequests, type Request } from '@/lib/github'
-import { demoRequests } from '@/lib/demo'
+import { DEMO_PREVIOUS_VISIT, demoRequests } from '@/lib/demo'
 import { RequestPanel } from './panel'
 
 export const dynamic = 'force-dynamic'
@@ -36,7 +36,7 @@ export default async function ClientPage({ params }: { params: Promise<{ key: st
       <p className="text-sm text-muted">{cfg.freelancer}</p>
       <h1 className="mt-1 text-2xl font-semibold tracking-tight">Requests</h1>
       <p className="mt-2 text-sm text-muted">Report a bug or ask for a change. You can follow each one here.</p>
-      <RequestPanel linkKey={key} requests={requests} />
+      <RequestPanel linkKey={key} requests={requests} previousVisit={cfg.demo ? DEMO_PREVIOUS_VISIT : undefined} />
     </main>
   )
 }
