@@ -4,13 +4,14 @@ A private request page for each of your clients, with GitHub Issues as the backe
 
 **[See the demo](https://stable.d1cpamxjnrj7er.amplifyapp.com/c/demo)**, a sample client page you can send requests from.
 
-<img src="docs/clientline.gif" alt="A client sends a request on their Clientline page and it appears at the top of their list as Received" width="760">
+<img src="docs/clientline.gif" alt="A client page with request counts by status and what changed since the last visit; filtering to Done, then sending a new request that appears at the top as Received" width="760">
 
 Your client opens their link, says what they need, and follows its status. Each request becomes an issue in your repo. There is no database, no client accounts and nothing to host beyond one small Next.js app.
 
 - **One link per client.** `/c/<key>`, no sign-up. A client sees only their own requests.
 - **Requests are GitHub issues,** labelled `client:<name>`, so they land in the tracker you already use.
 - **Status comes from the issue.** Open is *Received*, add an `in-progress` label for *In progress*, close it for *Done* (closing as "not planned" or as a duplicate shows *Closed*).
+- **What changed, at a glance.** Counts by status, and each request that is new or has moved since the client's last visit is marked. That is remembered in their browser, so nothing is stored.
 - **Your name, not ours.** Client pages show your name only.
 
 ## Deploy
