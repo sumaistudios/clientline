@@ -63,7 +63,7 @@ npm run dev
 
 ## Fix them automatically
 
-Clientline only collects the requests. If you want each one investigated, fixed on its own branch, independently verified and opened as a pull request for you to review, that is what [Keanu](https://www.heykeanu.app/?ref=clientline) does: add `keanu` to `EXTRA_LABELS` and Keanu picks up every new request.
+Clientline only collects the requests. If you want each one investigated, fixed on its own branch, independently verified and opened as a pull request for you to review, that is what [Keanu](https://www.heykeanu.app/?ref=clientline) does: add `keanu` to `EXTRA_LABELS` and Keanu picks up every new request. Approving one in Keanu moves it to *In progress* on your client's page, and Keanu's **Show to client** switch puts any other issue on their page too.
 
 ## License
 
